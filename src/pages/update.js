@@ -1,29 +1,47 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Navbar from "../Components/Navbar";
-import "./css/importProduct.css";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
-const urlpro = `${backendUrl}/api/importProduct`;
+const updateBlog = `${backendUrl}/api/updateBlog/${blogId}`;
 
-function ImportProduct() {
-    const [importproductName, setProduct] = useState("");
-    const [importQuantity, setImportQuantity] = useState("");
+function BlogUpdate() {
+    const { blogId } = useParams();
+    const [blogName, setBlogName] = useState("");
+    const [blogDes, setBlogDes] = useState("");
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchBlog = async () => {
+            try {
+                const response = await fetch(updateBlog)
+                if (response.ok) {
+                    const blogData = await response.json();
+                    setBlogName(blogData.blogName);
+                    setBlogDes(blogData.blogDes);
+                }
+            } catch (error) {
+                console.log("An error Shows", error)
+            }
+        }
+        fetchBlog();
+    }, [blogId]);
 
-    const handleImport = async (e) => {
+    const handleUpdate = async (e) => {
         e.preventDefault();
         const data = {
-            importproductName,
-            importQuantity,
+            blogName,
+            blogDes,
         };
 
         try {
-            const response = await fetch(urlpro, {
+            const response = await fetch(updateBlog, {
                 method: "PUT",
                 body: JSON.stringify(data),
-                
+                headers: {
+                    "Content-Type": "application/json",
+                }
+
             });
 
             console.log("Response:", response);
@@ -39,43 +57,38 @@ function ImportProduct() {
     };
 
     return (
-        <div>
-        
-
-            <div className="import-background">
-                <div className="import">
-                    <h1 className="importtitle2">Import Product Here</h1>
-                    <form>
-                        <div>
-                            <label className="inputimporttitle">Product Name:</label>
-                            <input
-                                className="inputimportfield1"
-                                type="text"
-                                value={importproductName}
-                                onChange={(e) => setProduct(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <label className="inputimporttitle">Quantity:</label>
-                            <input
-                                className="inputimportfield1"
-                                type="number"
-                                value={importQuantity}
-                                onChange={(e) => setImportQuantity(e.target.value)}
-                            />
-                        </div>
-                        <button
-                            className="buttonImport"
-                            type="button"
-                            onClick={handleImport}
-                        >
-                            Import
-                        </button>
-                    </form>
+        <form onSubmit={handleUpdate}>
+            <div className="">
+                <h1 className="">My Blogs</h1>
+                <div>
+                    <label className="">Blog Title:</label>
+                    <input
+                        className=""
+                        type="text"
+                        value={blogName}
+                        onChange={(e) => setBlogName(e.target.value)}
+                    />
                 </div>
+                <div>
+                    <label className="">Description:</label>
+                    <input
+                        className=""
+                        type="text"
+                        value={blogDes}
+                        onChange={(e) => setBlogDes(e.target.value)}
+                    />
+                </div>
+                <button
+                    className=""
+                    type="submit"
+                >
+                    Update
+                </button>
+
             </div>
-        </div>
+        </form>
+
     );
 }
 
-export default ImportProduct;
+export default BlogUpdate;

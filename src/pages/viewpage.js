@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from 'react-router-dom';
-import Navbar from "../Components/Navbar";
-import "./css/home.css";
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const urlhome = `${backendUrl}/api/home`;
 
 function View() {
     const [blogList, setBlogList] = useState([]);
+    const navigate = useNavigate();
 
 
     const fetchBlogList = useCallback(async () => {
@@ -32,17 +32,37 @@ function View() {
         fetchBlogList();
     }, [fetchBlogList]);
 
+    const handleDelete = async (blogId) => {
+        try{
+            const response = await fetch(urlhome , {
+                method: "DELETE"
+            })
+            if (response.ok){
+                fetchBlogList();
+            }else{
+                console.log("failed to delete or fetch blog")
+            }
+
+        }catch(error){
+            console.log("there is an error on Delete", error)
+        }
+        };
+
+        const handleEdit = (blogId) =>{
+            navigate(`/update/${blogId}`);
+        }
+
     return (
         <>
         
 
-            <div className="Home">
+            <div className="">
                 
-                <div className="blog List">
-                    <h1> Product List </h1>
-                    <ul className="get-blog">
+                <div className="">
+                    <h1> Blog List </h1>
+                    <ul className="">
                         {blogList.map((blog) => (
-                            <div key={blog._id} className="get-blogli">
+                            <div key={blog._id} className="">
                                 <div className="blog-item">
                         {/*
                             <img
@@ -54,15 +74,14 @@ function View() {
                                  */}  
                                     <div className="blog-details">
                                         <h3>{blog.blogName}</h3>
-                                        <p>Quantity: {blog.blogDescription}</p>
+                                        <p>description {blog.blogDes}</p>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </ul>
-
-
-
+                    <button onclick={() => handleEdit(blog._id)}>Edit</button>
+                    <button onClick={() => handleDelete(blog._id) }>Delete</button>
                 </div>
             </div>
         </>
