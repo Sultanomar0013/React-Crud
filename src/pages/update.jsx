@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
-const updateBlog = `${backendUrl}/api/updateBlog/${blogId}`;
+const backendUrl = import.meta.env.REACT_APP_BACKEND_URL;
+const updateBlog = `${backendUrl}/api/updateBlog`;
 
 function BlogUpdate() {
     const { blogId } = useParams();

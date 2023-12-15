@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const backendUrl = import.meta.env.REACT_APP_BACKEND_URL;
 const urlhome = `${backendUrl}/api/home`;
 
-function View() {
+function BlogView() {
     const [blogList, setBlogList] = useState([]);
     const navigate = useNavigate();
 
@@ -92,4 +92,4 @@ function View() {
 
 
 
-export default View;
+export default BlogView;
